@@ -1,13 +1,17 @@
+
+
 <main>
     <h1>Welcome to GrimRepoer</h1>
-</main>
     <slot></slot>
 
+</main>
+
 <style>
+
 main{ 
     width: 100vw;
     height: 100vh;
-    background-color: black;
+    background-color:#36373a;
     color: white;
     display: flex;
     align-items: center;
