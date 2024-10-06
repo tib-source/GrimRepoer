@@ -1,11 +1,11 @@
 <script>
+    import { CLIENT_ID } from "$env/static/private";
     import ghIcon from "$lib/assets/github.svg"
     export let accessToken; 
     
     const handleGithubAuth = () => { 
-        const clientId = "Ov23lilc8xzuk79UImmX"; 
         const redirectUri = encodeURIComponent(window.location.href)
-        window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=repo,delete_repo`;
+        window.location.href = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=repo,delete_repo`;
     }
 </script>
 <main>
