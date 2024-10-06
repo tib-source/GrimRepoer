@@ -1,18 +1,21 @@
 <script>
     import { PUBLIC_CLIENT_ID } from "$env/static/public";
     import ghIcon from "$lib/assets/github.svg"
-    export let accessToken; 
-    
+	import { accessToken } from "../store.js";
+
+
+
+    console.log($accessToken)
     const handleGithubAuth = () => { 
         const redirectUri = window.location.href
         window.location.href = `https://github.com/login/oauth/authorize?client_id=${PUBLIC_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=repo,delete_repo`;
     }
 </script>
 <main>
-    {#if !accessToken}
+    {#if !$accessToken}
     <button on:click={handleGithubAuth}><img src={ghIcon} alt="The Github Icon">Sign in</button>
     {:else}
-    <p>AUTHENTICATED: {accessToken}</p>
+    <p>AUTHENTICATED: {$accessToken}</p>
     {/if}
 </main>
 
