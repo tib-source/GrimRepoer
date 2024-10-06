@@ -22,12 +22,12 @@ jobs:
         run: npm install
 
       - name: build
-        env:
-          BASE_PATH: '/${{ github.event.repository.name }}'
-          PUBLIC_CLIENT_ID: ${{secrets.PUBLIC_CLIENT_ID}}
-          PUBLIC_CLIENT_SECRET: ${{secrets.PUBLIC_CLIENT_SECRET}}
         run: |
           npm run build
+        env:
+          BASE_PATH: '/${{ github.event.repository.name }}'
+          PUBLIC_CLIENT_ID: ${{ secrets.PUBLIC_CLIENT_ID }}
+          PUBLIC_CLIENT_SECRET: ${{ secrets.PUBLIC_CLIENT_SECRET }}
 
       - name: Upload Artifacts
         uses: actions/upload-pages-artifact@v3
