@@ -20,7 +20,8 @@
 
     main{
         margin-top: 1rem;
-        width: 70%;
+        width: min(700px,70%);
+        max-height: 60%;
         aspect-ratio: 1;
         border-radius: 1rem;
         box-shadow: 0 0 1rem rgba(0, 0, 0, 0.241);
