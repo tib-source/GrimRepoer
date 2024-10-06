@@ -1,5 +1,4 @@
-import { CLIENT_ID } from '$env/static/private';
-import { CLIENT_SECRET } from '$env/static/private';
+import { PUBLIC_CLIENT_ID, PUBLIC_CLIENT_SECRET } from '$env/static/public';
 
 export async function load({ url } ){ 
 
@@ -15,8 +14,8 @@ export async function load({ url } ){
                     accept: 'application/json'
                 },
                 body: JSON.stringify({
-                    client_id: CLIENT_ID, 
-                    client_secret: CLIENT_SECRET,
+                    client_id: PUBLIC_CLIENT_ID, 
+                    client_secret: PUBLIC_CLIENT_SECRET,
                     code,
                     redirect_uri: redirectUri
                 })
