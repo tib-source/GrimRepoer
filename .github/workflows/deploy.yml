@@ -24,8 +24,8 @@ jobs:
       - name: build
         env:
           BASE_PATH: '/${{ github.event.repository.name }}'
-          CLIENT_ID: ${{secrets.CLIENT_ID}}
-          CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
+          PUBLIC_CLIENT_ID: ${{secrets.PUBLIC_CLIENT_ID}}
+          PUBLIC_CLIENT_SECRET: ${{secrets.PUBLIC_CLIENT_SECRET}}
         run: |
           npm run build
 
