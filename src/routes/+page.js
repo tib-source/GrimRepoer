@@ -1,13 +1,12 @@
-import { accessToken } from '../store.js';
+import { accessToken } from '$lib/store';
 
 
-let token = ""
+let token = "";
 
 accessToken.subscribe(value => token = value)
 
 export async function load({ url, fetch }) {
-
-    if (token !== "") {
+    if (token) {
         return
     }
     const code = url.searchParams.get('code')
@@ -27,7 +26,6 @@ export async function load({ url, fetch }) {
             const resBody = await response.json();
 
             const extractedToken = resBody.token.split("&")[0].split("=")[1]
-
             accessToken.set(extractedToken)
 
 
