@@ -1,5 +1,5 @@
 <script>
-	export const trailingSlash = 'always';
+	export const trailingSlash = 'ignore';
 </script>
 
 <main>
