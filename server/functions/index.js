@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 /**
  * Import function triggers from their respective submodules:
  *
@@ -7,17 +8,17 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
-import { defineString } from "firebase-functions/params";
-import { onRequest } from "firebase-functions/v2/https";
+const {onRequest} = require("firebase-functions/v2/https");
+const { defineString } = require("firebase-functions/params");
+const {initializeApp} = require("firebase-admin/app");
 
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
+initializeApp(); 
 
 const client_id = defineString("CLIENT_ID");
 const client_secret = defineString("CLIENT_SECRET");
 
 
-export const getAccessToken = onRequest({
+exports.getAccessToken = onRequest({
     cors: true,
     timeoutSeconds: 1000,
 
@@ -32,14 +33,16 @@ export const getAccessToken = onRequest({
             code: code,
         })
 
-        await fetch("https://github.com/login/oauth/access_token", {
+        const res = await fetch("https://github.com/login/oauth/access_token", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
 
             },
             body: payload,
-        }).text().then(
+        })
+        
+        res.text().then(
             (data) => response.status(200).send({ token: data }))
             .catch((error) => response.status(400).send(error));
 
