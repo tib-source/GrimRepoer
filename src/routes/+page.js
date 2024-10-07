@@ -1,19 +1,26 @@
 import { accessToken } from '$lib/store';
+import { dev } from '$app/environment';
+import { PUBLIC_DEV_API, PUBLIC_PROD_API } from '$env/static/public';
 
 
-let token = "";
 
-accessToken.subscribe(value => token = value)
 
 export async function load({ url, fetch }) {
+
+    let token = "";
+    accessToken.subscribe(value => token = value)
+
     if (token) {
         return
     }
+
     const code = url.searchParams.get('code')
 
     if (code) {
         try {
-            const response = await fetch("http://127.0.0.1:5001/gitrepoer/us-central1/getAccessToken", {
+
+            let apiUrl = dev ? PUBLIC_DEV_API : PUBLIC_PROD_API
+            const response = await fetch(apiUrl, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
