@@ -29,7 +29,8 @@ jobs:
           BASE_PATH: '/${{ github.event.repository.name }}'
           PUBLIC_CLIENT_ID: ${{ secrets.PUBLIC_CLIENT_ID }}
           PUBLIC_CLIENT_SECRET: ${{ secrets.PUBLIC_CLIENT_SECRET }}
-
+          PUBLIC_DEV_API: ${{ secrets.DEV_API }}
+          PUBLIC_PROD_API: ${{ secrets.PROD_API }}
       - name: Upload Artifacts
         uses: actions/upload-pages-artifact@v3
         with:
