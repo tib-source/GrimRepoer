@@ -19,10 +19,12 @@ const client_secret = defineString("CLIENT_SECRET");
 
 
 exports.getAccessToken = onRequest({
-    cors: true,
+    cors:[],
     timeoutSeconds: 1000,
 
 }, async (request, response) => {
+    response.set('Access-Control-Allow-Origin', '*');
+
     const code = request.body["code"];
 
     console.log(request.body, code)
