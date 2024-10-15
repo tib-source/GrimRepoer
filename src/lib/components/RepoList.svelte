@@ -1,15 +1,18 @@
 <script>
-	import { accessToken, GH_BASE_URL } from '$lib/store';
+	import { accessToken, GH_BASE_URL, repoList } from '$lib/store';
 	import { onMount } from 'svelte';
+	import Repo from './Repo.svelte';
+	import Search from './Search.svelte';
+	import { el } from 'date-fns/locale';
 
 	/**
 	 * @type {any[]}
 	 */
-	let selected = [];
+	let filtered = []
 	/**
 	 * @type {any[]}
 	 */
-	$: repos = [];
+	let selected = [];
 
 	onMount(async () => {
 		let repoRes = fetch(`${$GH_BASE_URL}/user/repos`, {
@@ -24,40 +27,70 @@
 				return data.json();
 			})
 			.then((result) => {
-				console.log(result);
-				repos = result;
+				repoList.set(result)
 			})
 			.catch((error) => console.log(error));
 	});
 
-	console.log(repos);
+	const handleSelect = () => {
+		console.log("clicked")
+	}
+
+	let searchTerm = "";
+
+	const searchRepos = () => { 
+		filtered = $repoList.filter(repo => repo.full_name.toLowerCase().includes(searchTerm.toLowerCase()))
+	}
 </script>
 
 <main>
-	{#if selected}
-		SELECTED : {selected.map((value) => value.full_name)}
-	{/if}
-	<div class="repoList">
-		{#each repos as repo}
-			<section>
-				<input type="checkbox" bind:group={selected} value={repo} name="selected" id="selection" />
-				<div class="repoInfo">
-					<h4><a target="_blank" href={repo.html_url}>{repo.full_name}</a></h4>
-					<p>{repo.owner.login}</p>
-				</div>
-			</section>
-		{/each}
+	<div class="operations">
+		<Search bind:searchTerm on:input={searchRepos} />
+		<button>Delete</button>
+	</div>
+	<div class="repo_list">
+		{#if searchTerm && filtered.length === 0}
+			<p> :( no results found</p>
+		{:else if filtered.length > 0}
+			{#each filtered as repo}
+				<Repo repo={repo} handleSelect={handleSelect}/>
+			{/each}
+		{:else}
+			{#each $repoList as repo}
+				<Repo repo={repo} handleSelect={handleSelect}/>
+			{/each}
+		{/if}
 	</div>
 </main>
 
 <style lang="scss">
 	main {
-		width: 70%;
-		height: 90%;
 
-		.repoList {
+		padding: 2rem;
+		overflow: hidden;
+
+		.repo_list {
 			display: grid;
 			grid-template-columns: 1fr 1fr;
+			gap: 1rem;
+		}
+
+		.operations{ 
+			border-radius: 1rem;
+			margin-bottom: 1rem;
+			padding: .2rem;
+			display: flex;
+			justify-content: space-between;
+
+
+			button{
+				padding: .7rem;
+				border-radius: 1rem;
+				background-color: rgba(255, 0, 0, 0.728);
+				color: white;
+				font-weight: 700;
+				justify-self: flex-end;
+			}
 		}
 		section {
 			display: flex;
