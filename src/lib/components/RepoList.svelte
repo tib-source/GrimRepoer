@@ -3,7 +3,6 @@
 	import { onMount } from 'svelte';
 	import Repo from './Repo.svelte';
 	import Search from './Search.svelte';
-	import { el } from 'date-fns/locale';
 
 	/**
 	 * @type {any[]}
@@ -32,8 +31,16 @@
 			.catch((error) => console.log(error));
 	});
 
-	const handleSelect = () => {
-		console.log("clicked")
+	const handleSelect = (e, repo, setSelected) => {
+		let curr = e.srcElement;
+		if (selected.includes(repo)){
+			setSelected(false)
+			selected = [...selected.filter( element => element !== repo)]
+		}else{ 
+			selected.push(repo)
+			setSelected(true)
+		}
+		
 	}
 
 	let searchTerm = "";
@@ -44,7 +51,7 @@
 </script>
 
 <main>
-	<div class="operations">
+	<div class="operations" >
 		<Search bind:searchTerm on:input={searchRepos} />
 		<button>Delete</button>
 	</div>
@@ -53,11 +60,11 @@
 			<p> :( no results found</p>
 		{:else if filtered.length > 0}
 			{#each filtered as repo}
-				<Repo repo={repo} handleSelect={handleSelect}/>
+				<Repo repo={repo} selected={false} handleSelect={handleSelect}/>
 			{/each}
 		{:else}
 			{#each $repoList as repo}
-				<Repo repo={repo} handleSelect={handleSelect}/>
+				<Repo repo={repo} selected={false} handleSelect={handleSelect}/>
 			{/each}
 		{/if}
 	</div>
@@ -102,5 +109,11 @@
 			border: 1px solid black;
 			padding: 1rem;
 		}
+
+
+		.selected{ 
+        background-color: rgba(53, 143, 221, 0.125);
+		}
+
 	}
 </style>

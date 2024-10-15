@@ -1,6 +1,7 @@
 <script>    
     export let repo;
     export let handleSelect;
+    export let selected;
 
     import { formatDistanceToNow } from 'date-fns'
 
@@ -10,15 +11,19 @@
             addSuffix: true
         })
     }
+
+    const setSelected = ( value ) =>{
+        selected = value
+    }
     
 </script>
 
 <main>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <div class="container" on:click={handleSelect} role="cell" tabindex=0>
-        <h3><a href={repo.html_url} target="_blank">{repo.full_name}</a></h3>
-        <p>{repo.description && " "} | Owner: <a href={repo.owner.html_url}> {repo.owner.login} </a></p>
-        <div class="stats">
+    <div class="container" class:selected on:click={(e) => handleSelect(e, repo, setSelected)} role="cell" tabindex=0>
+        <h3><a href={repo.html_url} on:click|preventDefault|stopPropagation target="_blank">{repo.full_name}</a></h3>
+        <p>{repo.description && " "} | Owner: <a on:click|preventDefault|stopPropagation href={repo.owner.html_url}> {repo.owner.login} </a></p>
+        <div  class="stats">
             <span> 🏃🏻‍♂️ 18</span>
             <span> ⭐️ 300</span>
             <span
@@ -50,6 +55,10 @@
 
             
         }
+    }
+
+    .selected{ 
+        background-color: rgba(53, 143, 221, 0.125);
     }
 
 
