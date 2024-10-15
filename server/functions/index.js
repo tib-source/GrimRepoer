@@ -22,8 +22,14 @@ exports.getAccessToken = onRequest({
     timeoutSeconds: 1000,
 }, async (request, response) => {
     cors(request, response, async () => { 
-        response.set('Access-Control-Allow-Origin', '*');
-
+        response.set('Access-Control-Allow-Origin', 'https://www.tibebe.co.uk');
+        response.set('Access-Control-Allow-Methods', 'POST');
+        response.set('Access-Control-Allow-Headers', 'Content-Type');
+        // Handle preflight requests (OPTIONS)
+        if (request.method === 'OPTIONS') {
+            response.set('Access-Control-Allow-Origin', 'https://www.tibebe.co.uk');
+            return response.status(204).send(''); // No content for OPTIONS
+          }
         const code = request.body["code"];
     
         console.log(request.body, code)
