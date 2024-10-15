@@ -78,8 +78,12 @@
 
 		const url = new URL(window.location.href);
 		const params = url.searchParams;
-		if (params) {
-			goto("/")
+		if (params.get('code')) {
+			if (dev){
+				goto("/")
+			}else{ 
+				goto("/GrimRepoer")
+			}
 		}
 	});
 </script>
