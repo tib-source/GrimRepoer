@@ -33,6 +33,7 @@
 
 	const handleSelect = (e, repo, setSelected) => {
 		let curr = e.srcElement;
+		console.log(repo)
 		if (selected.includes(repo)){
 			setSelected(false)
 			selected = [...selected.filter( element => element !== repo)]
@@ -43,20 +44,21 @@
 		
 	}
 
-	let searchTerm = "";
+	let currSearch = ""
 
-	const searchRepos = () => { 
+	const searchRepos = (searchTerm) => {
+		currSearch = searchTerm
 		filtered = $repoList.filter(repo => repo.full_name.toLowerCase().includes(searchTerm.toLowerCase()))
 	}
 </script>
 
 <main>
 	<div class="operations" >
-		<Search bind:searchTerm on:input={searchRepos} />
+		<Search handleSearch={searchRepos} />
 		<button>Delete</button>
 	</div>
 	<div class="repo_list">
-		{#if searchTerm && filtered.length === 0}
+		{#if currSearch && filtered.length === 0}
 			<p> :( no results found</p>
 		{:else if filtered.length > 0}
 			{#each filtered as repo}
@@ -91,12 +93,18 @@
 
 
 			button{
-				padding: .7rem;
+				padding: .7rem 1.5rem;
 				border-radius: 1rem;
 				background-color: rgba(255, 0, 0, 0.728);
-				color: white;
+				border: 1px solid black;
+				color: black;
 				font-weight: 700;
+				cursor: pointer;
 				justify-self: flex-end;
+			}
+
+			button:active{ 
+				border: 1px dotted white;
 			}
 		}
 		section {

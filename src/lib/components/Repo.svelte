@@ -1,7 +1,12 @@
 <script>    
+    import pullRequests from '$lib/assets/Nesting.svg';
+    import starIcon from '$lib/assets/Star.svg';
     export let repo;
     export let handleSelect;
-    export let selected;
+    /**
+	 * @type {any}
+	 */
+     export let selected;
 
     import { formatDistanceToNow } from 'date-fns'
 
@@ -21,11 +26,11 @@
 <main>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div class="container" class:selected on:click={(e) => handleSelect(e, repo, setSelected)} role="cell" tabindex=0>
-        <h3><a href={repo.html_url} on:click|preventDefault|stopPropagation target="_blank">{repo.full_name}</a></h3>
-        <p>{repo.description && " "} | Owner: <a on:click|preventDefault|stopPropagation href={repo.owner.html_url}> {repo.owner.login} </a></p>
+        <h3><a href={repo.html_url} on:click|stopPropagation target="_blank">{repo.full_name}</a></h3>
+        <p>Owner: <a on:click|stopPropagation href={repo.owner.html_url}> {repo.owner.login} </a></p>
         <div  class="stats">
-            <span> 🏃🏻‍♂️ 18</span>
-            <span> ⭐️ 300</span>
+            <span> <img src="{pullRequests}" alt="" srcset=""> <p>{repo.forks_count}</p></span>
+            <span> <img src="{starIcon}" alt="" srcset=""> <p>{repo.stargazers_count}</p></span>
             <span
             style:font-size={".75rem"}
             > Updated {handleDate(repo.updated_at)}</span>
@@ -42,11 +47,22 @@
         display: grid;
         gap: .5rem;
         border-radius: 1rem;
+        cursor: pointer;
 
         a { 
             color: rgb(190, 189, 255);
             text-decoration: none;
         }
+
+        span{
+            display: flex;
+
+            p{
+            margin-top: 2px;
+            margin-left: 2px;
+        }
+        }
+
 
         .stats{ 
             display: flex;
