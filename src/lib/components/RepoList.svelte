@@ -1,8 +1,10 @@
 <script>
-	import { accessToken, GH_BASE_URL, repoList } from '$lib/store';
+	import { accessToken, GH_BASE_URL, repoList, selected } from '$lib/store';
 	import { onMount } from 'svelte';
 	import Repo from './Repo.svelte';
 	import Search from './Search.svelte';
+	import ConfirmationModal from './ConfirmationModal.svelte';
+	import Loading from './Loading.svelte';
 
 	/**
 	 * @type {any[]}
@@ -11,7 +13,6 @@
 	/**
 	 * @type {any[]}
 	 */
-	let selected = [];
 
 	onMount(async () => {
 		let repoRes = fetch(`${$GH_BASE_URL}/user/repos`, {
@@ -34,11 +35,11 @@
 	const handleSelect = (e, repo, setSelected) => {
 		let curr = e.srcElement;
 		console.log(repo)
-		if (selected.includes(repo)){
+		if ($selected.includes(repo)){
 			setSelected(false)
-			selected = [...selected.filter( element => element !== repo)]
+			removeFromSelected(repo)
 		}else{ 
-			selected.push(repo)
+			$selected.push(repo)
 			setSelected(true)
 		}
 		
@@ -50,23 +51,55 @@
 		currSearch = searchTerm
 		filtered = $repoList.filter(repo => repo.full_name.toLowerCase().includes(searchTerm.toLowerCase()))
 	}
+	let showConfirmModal = false;
+
+	const toggleConfirmationModal = () =>{ 
+		showConfirmModal = !showConfirmModal
+	}
+
+	const handleDelete = () => { 
+		if (!showConfirmModal){
+			if($selected.length > 0){
+				toggleConfirmationModal()
+			}
+		}else{ 
+			console.log("Deleted")		
+		}
+	}
+
+
+	const inSelected = (/** @type {any} */ repo) => { 
+		return $selected.includes(repo)
+	}
+
+	const removeFromSelected = (toRemove) => { 
+		selected.update(selected => selected.filter(repo => repo != toRemove))
+	}
+
 </script>
 
 <main>
+	{#if showConfirmModal}
+		<ConfirmationModal class="modal" toggleModal={toggleConfirmationModal} selected={$selected} removeFromSelected={removeFromSelected} />
+	{/if}
 	<div class="operations" >
 		<Search handleSearch={searchRepos} />
-		<button>Delete</button>
+		<button on:click={handleDelete}>Delete</button>
 	</div>
+	{#if $repoList.length === 0 }
+		<div class="loader"><Loading/></div>
+	{/if}
 	<div class="repo_list">
+
 		{#if currSearch && filtered.length === 0}
 			<p> :( no results found</p>
 		{:else if filtered.length > 0}
 			{#each filtered as repo}
-				<Repo repo={repo} selected={false} handleSelect={handleSelect}/>
+				<Repo repo={repo} selected={$selected.includes(repo)} handleSelect={handleSelect}/>
 			{/each}
 		{:else}
 			{#each $repoList as repo}
-				<Repo repo={repo} selected={false} handleSelect={handleSelect}/>
+				<Repo repo={repo} selected={$selected.includes(repo)} handleSelect={handleSelect}/>
 			{/each}
 		{/if}
 	</div>
@@ -74,10 +107,15 @@
 
 <style lang="scss">
 	main {
-
+		width: 100%;
 		padding: 2rem;
 		overflow: hidden;
 
+		.loader{
+			display: flex;
+			justify-content: center;
+			padding-top: 3rem;
+		}
 		.repo_list {
 			display: grid;
 			grid-template-columns: 1fr 1fr;
@@ -123,5 +161,11 @@
         background-color: rgba(53, 143, 221, 0.125);
 		}
 
+
+	}
+
+	.modal{ 
+			display: flex;
+			background-color: rebeccapurple;
 	}
 </style>
