@@ -9,6 +9,7 @@
      export let selected;
 
     import { formatDistanceToNow } from 'date-fns'
+	import { slide, fly, fade } from 'svelte/transition';
 
     const handleDate = (/** @type {string} */ date) => { 
         let to_format = new Date(date)
@@ -21,12 +22,14 @@
         selected = value
     }
 
+    export let direction = 1;
+
     
 </script>
 
 <main>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <div class="container" class:selected on:click={(e) => handleSelect(e, repo, setSelected)} role="cell" tabindex=0>
+    <div in:fly={{ x: 50 * direction, duration: 1000}} class="container" class:selected on:click={(e) => handleSelect(e, repo, setSelected)} role="cell" tabindex=0>
         <h3><a href={repo.html_url} on:click|stopPropagation target="_blank">{repo.full_name}</a></h3>
         <p>Owner: <a on:click|stopPropagation href={repo.owner.html_url}> {repo.owner.login} </a></p>
         <div  class="stats">
@@ -48,6 +51,8 @@
         display: grid;
         gap: .5rem;
         border-radius: 1rem;
+        min-height: 135px;
+        max-height: 135px;
         cursor: pointer;
 
         a { 

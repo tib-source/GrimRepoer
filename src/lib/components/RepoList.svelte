@@ -5,13 +5,20 @@
 	import Search from './Search.svelte';
 	import ConfirmationModal from './ConfirmationModal.svelte';
 	import Loading from './Loading.svelte';
-	import { page } from '$app/stores';
-	import { da } from 'date-fns/locale';
+	import Pagination from './Pagination.svelte';
 
 	/**
 	 * @type {any[]}
 	 */
-	let filtered = []
+	let trimmed = []
+	/**
+	 * @type {string | any[]}
+	 */
+	let searchResult = []
+	/**
+	 * @type {any[]}
+	 */
+	let searchTrimmed = []
 	/**
 	 * @type {any[]}
 	 */
@@ -39,6 +46,7 @@
 
 		// @ts-ignore
 		repoList.set(repoAccumulator)
+		pageLoaded = true
 
 		
 	});
@@ -57,11 +65,12 @@
 		
 	}
 
+	let pageLoaded = false
 	let currSearch = ""
 
-	const searchRepos = (searchTerm) => {
+	const searchRepos = (/** @type {string} */ searchTerm) => {
 		currSearch = searchTerm
-		filtered = $repoList.filter(repo => repo.full_name.toLowerCase().includes(searchTerm.toLowerCase()))
+		searchResult = $repoList.filter(repo => repo.full_name.toLowerCase().includes(searchTerm.toLowerCase()))
 	}
 	let showConfirmModal = false;
 
@@ -88,9 +97,12 @@
 		selected.update(selected => selected.filter(repo => repo != toRemove))
 	}
 
+	let direction = 1;
+
 </script>
 
 <main>
+
 	{#if showConfirmModal}
 		<ConfirmationModal toggleModal={toggleConfirmationModal} selected={$selected} removeFromSelected={removeFromSelected} />
 	{/if}
@@ -103,16 +115,20 @@
 	{/if}
 	<div class="repo_list">
 
-		{#if currSearch && filtered.length === 0}
+		{#if currSearch && searchResult.length === 0}
 			<p> :( no results found</p>
-		{:else if filtered.length > 0}
-			{#each filtered as repo}
-				<Repo repo={repo} selected={$selected.includes(repo)} handleSelect={handleSelect}/>
+		{:else if searchResult.length > 0}
+			{#each searchTrimmed as repo (repo.id)}
+				<Repo bind:direction={direction} repo={repo} selected={$selected.includes(repo)} handleSelect={handleSelect}/>
 			{/each}
+			<Pagination bind:direction={direction} itemList={searchResult} bind:trimmedList={searchTrimmed}/>
 		{:else}
-			{#each $repoList as repo}
-				<Repo repo={repo} selected={$selected.includes(repo)} handleSelect={handleSelect}/>
+			{#each trimmed as repo (repo.id)}
+				<Repo direction={direction} repo={repo} selected={$selected.includes(repo)} handleSelect={handleSelect}/>
 			{/each}
+			{#if pageLoaded}
+				<Pagination bind:direction={direction} itemList={$repoList} bind:trimmedList={trimmed}/>
+			{/if}
 		{/if}
 	</div>
 </main>
