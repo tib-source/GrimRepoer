@@ -1,8 +1,10 @@
 <script>
 	export const trailingSlash = 'ignore';
+	import background from "$lib/assets/background.webp";
 </script>
 
-<main>
+
+<main style="background-image:url({background})">
 	<h1><span
 		style:color=red
 		>Grim</span> Repoer</h1>
@@ -26,9 +28,8 @@
 		flex-direction: column;
 		padding-top: 5rem;
 		min-height: 100vh;
-		
-		
-
+		background-position: center;
+		background-blend-mode: overlay ;
 
 	}
 

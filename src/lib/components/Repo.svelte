@@ -46,13 +46,15 @@
 
 <style lang="scss">
     .container{ 
-        background:  rgba(17,23,40,1);
+        background:  rgba(17, 23, 40, 0.664);
+        backdrop-filter: blur(10px);
         padding: 1rem 1.5rem;
         display: grid;
         gap: .5rem;
         border-radius: 1rem;
         min-height: 135px;
         max-height: 135px;
+        box-shadow: 0 0 .1rem white;
         cursor: pointer;
 
         a { 
@@ -80,7 +82,7 @@
     }
 
     .selected{ 
-        background-color: rgba(53, 143, 221, 0.125);
+        background-color: rgba(26, 22, 75, 0.594);
     }
 
 
