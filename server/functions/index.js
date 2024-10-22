@@ -11,7 +11,7 @@
 const {onRequest} = require("firebase-functions/v2/https");
 const { defineString } = require("firebase-functions/params");
 const {initializeApp} = require("firebase-admin/app");
-const cors = require('cors')({origin: 'https://www.tibebe.co.uk'})
+const cors = require('cors')({origin: ['https://www.tibebe.co.uk','http://localhost']})
 initializeApp(); 
 
 const client_id = defineString("CLIENT_ID");
@@ -22,9 +22,16 @@ exports.getAccessToken = onRequest({
     timeoutSeconds: 1000,
 }, async (request, response) => {
     cors(request, response, async () => { 
-        response.set('Access-Control-Allow-Origin', 'https://www.tibebe.co.uk');
         response.set('Access-Control-Allow-Methods', 'POST');
         response.set('Access-Control-Allow-Headers', 'Content-Type');
+
+        const allowedOrigins = ['https://www.tibebe.co.uk', 'http://localhost'];
+        const origin = request.headers.origin;
+
+        if (allowedOrigins.includes(origin)) {
+            response.set('Access-Control-Allow-Origin', origin); // Dynamically set based on the request origin
+        }
+
         // Handle preflight requests (OPTIONS)
         if (request.method === 'OPTIONS') {
             response.set('Access-Control-Allow-Origin', 'https://www.tibebe.co.uk');

@@ -5,6 +5,8 @@
 	import Search from './Search.svelte';
 	import ConfirmationModal from './ConfirmationModal.svelte';
 	import Loading from './Loading.svelte';
+	import { page } from '$app/stores';
+	import { da } from 'date-fns/locale';
 
 	/**
 	 * @type {any[]}
@@ -15,23 +17,33 @@
 	 */
 
 	onMount(async () => {
-		let repoRes = fetch(`${$GH_BASE_URL}/user/repos`, {
-			method: 'GET',
-			headers: {
-				Accept: 'application/vnd.github+json',
-				Authorization: `Bearer ${$accessToken}`,
-				'X-GitHub-Api-Version': '2022-11-28'
+		let pageCount = 1; 
+		let repoAccumulator = []
+		while(true){ 
+			let repoRes = await fetch(`${$GH_BASE_URL}/user/repos?page=${pageCount}`, {
+				method: 'GET',
+				headers: {
+					Accept: 'application/vnd.github+json',
+					Authorization: `Bearer ${$accessToken}`,
+					'X-GitHub-Api-Version': '2022-11-28'
+				}
+			})
+
+			let data = await repoRes.json()
+			if (data.length == 0){
+				break
 			}
-		})
-			.then((data) => {
-				return data.json();
-			})
-			.then((result) => {
-				repoList.set(result)
-			})
-			.catch((error) => console.log(error));
+			repoAccumulator.push(...data)
+			pageCount += 1 
+		}
+
+		// @ts-ignore
+		repoList.set(repoAccumulator)
+
+		
 	});
 
+	// @ts-ignore
 	const handleSelect = (e, repo, setSelected) => {
 		let curr = e.srcElement;
 		console.log(repo)
@@ -80,7 +92,7 @@
 
 <main>
 	{#if showConfirmModal}
-		<ConfirmationModal class="modal" toggleModal={toggleConfirmationModal} selected={$selected} removeFromSelected={removeFromSelected} />
+		<ConfirmationModal toggleModal={toggleConfirmationModal} selected={$selected} removeFromSelected={removeFromSelected} />
 	{/if}
 	<div class="operations" >
 		<Search handleSearch={searchRepos} />
@@ -162,10 +174,5 @@
 		}
 
 
-	}
-
-	.modal{ 
-			display: flex;
-			background-color: rebeccapurple;
 	}
 </style>

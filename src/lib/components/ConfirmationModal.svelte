@@ -6,7 +6,7 @@ export let toggleModal;
 let className = " ";
 export { className as class } ;
 </script>
-<div class="{className}">
+<div class="modal">
 
     <h1>Are you sure you want to delete the following?</h1>
     {#each selected as repo }
@@ -19,9 +19,14 @@ export { className as class } ;
 </div>
 <style lang="scss">
     .modal{
+        position: fixed;
+        top: 50%;  
+        left: 50%; 
+
+        transform: translate(-50%, -50%);
         width: min(700px,80%);
         background-color: rgba(4, 20, 53, 0.819);
-        position: absolute;
+        color: white;
         z-index: 100;
         min-height: 200px;
         display: flex;
@@ -31,7 +36,8 @@ export { className as class } ;
         backdrop-filter: blur(3px);
         padding: 3rem;
         gap: 1rem;
-        box-shadow: 0 0 4rem rgba(255, 255, 255, 0.089);
+        border-radius: 1rem;
+        box-shadow: 0 0 4rem rgba(0, 0, 0, 0.303);
 
         .to_be_deleted{ 
             display: flex;
