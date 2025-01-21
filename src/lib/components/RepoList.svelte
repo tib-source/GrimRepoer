@@ -81,6 +81,7 @@
 				console.error(`Failed to delete ${repo.full_name}:`, error);
 			}
 		}
+		toggleConfirmationModal()
 	};
 
 
