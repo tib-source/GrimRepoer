@@ -35,7 +35,6 @@
 					'X-GitHub-Api-Version': '2022-11-28'
 				}
 			})
-
 			let data = await repoRes.json()
 			if (data.length == 0){
 				break
@@ -64,6 +63,26 @@
 		}
 		
 	}
+
+	// write a function to delete the selected repos from github and update the repoList store
+	const deleteSelectedRepos = async () => {
+		for (let repo of $selected) {
+			try {
+				await fetch(`${repo.url}`, {
+					method: 'DELETE',
+					headers: {
+						Accept: 'application/vnd.github+json',
+						Authorization: `Bearer ${$accessToken}`,
+						'X-GitHub-Api-Version': '2022-11-28'
+					}
+				});
+				removeFromSelected(repo);
+			} catch (error) {
+				console.error(`Failed to delete ${repo.full_name}:`, error);
+			}
+		}
+	};
+
 
 	let pageLoaded = false
 	let currSearch = ""
@@ -104,7 +123,7 @@
 <main>
 
 	{#if showConfirmModal}
-		<ConfirmationModal toggleModal={toggleConfirmationModal} selected={$selected} removeFromSelected={removeFromSelected} />
+		<ConfirmationModal toggleModal={toggleConfirmationModal} selected={$selected} removeFromSelected={removeFromSelected} handleDelete={deleteSelectedRepos} />
 	{/if}
 	<div class="operations" >
 		<Search handleSearch={searchRepos} />

@@ -1,20 +1,20 @@
 <script>
-import closeIcon from '$lib/assets/close.svg';
 export let selected;
 export let removeFromSelected;
 export let toggleModal;
-let className = " ";
-export { className as class } ;
+export let handleDelete;
 </script>
 <div class="modal">
 
-    <h1>Are you sure you want to delete the following?</h1>
+    <h1>Confirm Selected Deletions : </h1>
+    <div class="delete_list">
     {#each selected as repo }
         <div class="to_be_deleted"><a href="{repo.html_url}">{repo.full_name}</a> <button on:click={()=> removeFromSelected(repo)}>X</button></div>
     {/each}
+    </div>
     <div class="buttons">
         <button id="cancel" on:click={toggleModal}>Cancel</button>
-        <button>Delete</button>
+        <button on:click={handleDelete}>Delete</button>
     </div>
 </div>
 <style lang="scss">
@@ -25,21 +25,27 @@ export { className as class } ;
 
         transform: translate(-50%, -50%);
         width: min(700px,80%);
-        background-color: rgba(4, 20, 53, 0.819);
+        background-color:rgba(0, 0, 0, 0.699);
         color: white;
         z-index: 100;
         min-height: 200px;
         display: flex;
         justify-content: center;
-        align-items: center;
         flex-direction: column;
         backdrop-filter: blur(3px);
         padding: 3rem;
-        gap: 1rem;
-        border-radius: 1rem;
-        box-shadow: 0 0 4rem rgba(0, 0, 0, 0.303);
+        gap: 1.5rem;
+        box-shadow: 0 0 4rem rgba(255, 255, 255, 0.351);
+        h1{
+            text-align: left;
+        }
 
+        .delete_list{
+            display: grid;
+            gap: 1rem;
+        }
         .to_be_deleted{ 
+            margin: auto;
             display: flex;
             gap: 1rem;
             padding: .5rem 1rem;
@@ -49,14 +55,14 @@ export { className as class } ;
             align-items: center;
             a{ 
                 text-decoration: none;
-                color: red;
+                color: red
             }
 
             button{ 
                 padding: .1rem .5rem;
                 outline: none;
-                color: white;
-                background-color: black;
+                color: black;
+                background-color: white;
                 border: 1px solid black;
             }
         }
