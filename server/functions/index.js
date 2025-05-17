@@ -25,7 +25,7 @@ exports.getAccessToken = onRequest({
         response.set('Access-Control-Allow-Methods', 'POST');
         response.set('Access-Control-Allow-Headers', 'Content-Type');
 
-        const allowedOrigins = ['https://www.tibebe.co.uk', 'http://localhost'];
+        const allowedOrigins = ['https://www.tibebe.co.uk', 'http://localhost', "https://tib-source.github.io/"];
         const origin = request.headers.origin;
 
         if (allowedOrigins.includes(origin)) {
