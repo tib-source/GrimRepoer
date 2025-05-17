@@ -8,10 +8,12 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
+
+
 const {onRequest} = require("firebase-functions/v2/https");
 const { defineString } = require("firebase-functions/params");
 const {initializeApp} = require("firebase-admin/app");
-const cors = require('cors')({origin: ['https://www.tibebe.co.uk','http://localhost']})
+const cors = require('cors')({origin: []});
 initializeApp(); 
 
 const client_id = defineString("CLIENT_ID");
@@ -22,21 +24,18 @@ exports.getAccessToken = onRequest({
     timeoutSeconds: 1000,
 }, async (request, response) => {
     cors(request, response, async () => { 
-        response.set('Access-Control-Allow-Methods', 'POST');
-        response.set('Access-Control-Allow-Headers', 'Content-Type');
 
-        const allowedOrigins = ['https://www.tibebe.co.uk', 'http://localhost', "https://tib-source.github.io/"];
         const origin = request.headers.origin;
-
-        if (allowedOrigins.includes(origin)) {
-            response.set('Access-Control-Allow-Origin', origin); // Dynamically set based on the request origin
+        // Handle CORS preflight
+        if (request.method === 'OPTIONS') {
+            const origin = request.headers.origin;
+            response.set('Access-Control-Allow-Origin', "https://tib-source.github.io/");
+            response.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+            response.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+            return response.status(204).send('');
         }
 
-        // Handle preflight requests (OPTIONS)
-        if (request.method === 'OPTIONS') {
-            response.set('Access-Control-Allow-Origin', 'https://www.tibebe.co.uk');
-            return response.status(204).send(''); // No content for OPTIONS
-          }
+
         const code = request.body["code"];
     
         console.log(request.body, code)
