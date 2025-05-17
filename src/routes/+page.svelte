@@ -1,14 +1,13 @@
 <script>
 	import { browser } from '$app/environment';
 	import { goto, replaceState } from '$app/navigation';
-	import { PUBLIC_CLIENT_ID } from '$env/static/public';
 	import ghIcon from '$lib/assets/github.svg';
 	import RepoList from '$lib/components/RepoList.svelte';
 	import { accessToken } from '$lib/store';
 	import { redirect } from '@sveltejs/kit';
 	import { onMount } from 'svelte';
 	import { dev } from '$app/environment';
-	import { PUBLIC_DEV_API, PUBLIC_PROD_API } from '$env/static/public';
+	import { PUBLIC_DEV_API, PUBLIC_PROD_API, PUBLIC_CLIENT_ID } from '$env/static/public';
 
 
 

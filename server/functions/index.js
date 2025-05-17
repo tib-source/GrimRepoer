@@ -13,7 +13,12 @@
 const {onRequest} = require("firebase-functions/v2/https");
 const { defineString } = require("firebase-functions/params");
 const {initializeApp} = require("firebase-admin/app");
-const cors = require('cors')({origin: []});
+const cors = require('cors')({
+    origin: ["https://tib-source.github.io"],
+    methods: ['POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type'],
+    maxAge: 3600,       
+});
 initializeApp(); 
 
 const client_id = defineString("CLIENT_ID");
@@ -25,16 +30,9 @@ exports.getAccessToken = onRequest({
 }, async (request, response) => {
     cors(request, response, async () => { 
 
-        const origin = request.headers.origin;
-        // Handle CORS preflight
         if (request.method === 'OPTIONS') {
-            const origin = request.headers.origin;
-            response.set('Access-Control-Allow-Origin', "https://tib-source.github.io/");
-            response.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
-            response.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-            return response.status(204).send('');
+            return;
         }
-
 
         const code = request.body["code"];
     
